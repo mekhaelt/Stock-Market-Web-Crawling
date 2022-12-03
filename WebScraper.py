@@ -1,21 +1,19 @@
 import time
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from datetime import datetime
-
-# path of the chromedriver we have just downloaded
-PATH = r"D:\chromedriver"
-driver = webdriver.Chrome(PATH)  # to open the browser
+import pandas as pd
   
-# url of google news website
+
+
+s = Service("D:\chromedriver")
+  
+driver = webdriver.Chrome(service=s)
+  
 url = 'https://www.tradingview.com/markets/stocks-usa/market-movers-gainers/'
   
-# to open the url in the browser
-driver.get(url)  
-
-stocks = [100]
-
-
-
+driver.get(url)
+  
 while(True):
     now = datetime.now()
       
@@ -23,24 +21,34 @@ while(True):
     # web scraping
     current_time = now.strftime("%H:%M:%S")
     print(f'At time : {current_time} IST')
-    c = 1
-  
+    stocks=['none']*100
+    columns=[1]*100
+    c=0
+
     for x in range(1, 101):
         curr_path = ''
           
         # Exception handling to handle unexpected changes
         # in the structure of the website
         try:
-            curr_path = f'//html/body/div[3]/div[4]/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div/table/tbody/tr[{x}]/td[1]/span/sup'
-            title = driver.find_element_by_xpath(curr_path)
+            curr_path = f'/html/body/div[3]/div[4]/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div/table/tbody/tr[{x}]/td[1]/span/sup'
+            title = driver.find_element("xpath", curr_path)
         except:
             continue
-        print(f"Heading {c}: ")
+        stocks[c]=(title.text)
+       
         c += 1
-        print(title.text)
-          
+        columns[c-1]=c
+    # print(stocks)
+    # chart1 = pd.Series(stocks)
+
+    df = pd.DataFrame(stocks, index=columns)
+    #df.to_excel('df.xlsx')
+
+    #print(chart1)
+
     # to stop the running of code for 10 mins
     time.sleep(600) 
+  
 
-
-
+    
