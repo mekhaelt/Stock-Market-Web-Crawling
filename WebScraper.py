@@ -68,4 +68,4 @@ while(True):
 
 
     # stops and reruns the code every 10 minutes
-    time.sleep(20) 
+    time.sleep(600) 
