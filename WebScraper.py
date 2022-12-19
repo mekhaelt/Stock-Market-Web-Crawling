@@ -22,10 +22,10 @@ while(True):
     print(f'At time : {current_time} IST')
     
     # arrays to store collected data
-    stocks=['none']*100
-    percents=[1]*100
-    prices=[1]*100
-    volumes=[1]*100
+    stocks=['error']*100
+    percents=['error']*100
+    prices=['error']*100
+    volumes=['error']*100
     
     # counter variable
     c=0
@@ -41,27 +41,27 @@ while(True):
             change_path = f'/html/body/div[3]/div[4]/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div/table/tbody/tr[{x}]/td[2]/span'
             percent = driver.find_element("xpath", change_path)
 
-            cost_path = f'/html/body/div[3]/div[4]/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div/table/tbody/tr[{x}]/td[3]/text()'
-            #cost = driver.find_element("xpath", cost_path)
+            cost_path = f'/html/body/div[3]/div[4]/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div/table/tbody/tr[{x}]/td[3]'
+            cost = driver.find_element("xpath", cost_path)
 
             volume_path = f'/html/body/div[3]/div[4]/div/div/div/div[2]/div[2]/div/div[2]/div[2]/div/div/div/table/tbody/tr[{x}]/td[6]'
             vol = driver.find_element("xpath", volume_path)
-
-
-
 
         except:
             continue
         stocks[c]=(title.text)
         percents[c]=(percent.text)
         volumes[c]=(vol.text)
+        prices[c]=(cost.text)
         c += 1
   
     # creating chart and importing into excel
     df = pd.DataFrame()
     df['Biggest Gainers'] = stocks
     df['% Change'] = percents
+    df['Cost'] = prices
     df['Volume'] = volumes
+    
     df.to_excel('Stock Info.xlsx', index=False)
 
 
